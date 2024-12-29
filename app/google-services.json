@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "973426698292",
+    "firebase_url": "https://rebanpet-be500-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "rebanpet-be500",
+    "storage_bucket": "rebanpet-be500.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973426698292:android:4723fd887e8284f9df0261",
+        "android_client_info": {
+          "package_name": "pt.project.rebanpet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmVgAP1JmZ9Vn0NE2WUb7DR-cGIl39pbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

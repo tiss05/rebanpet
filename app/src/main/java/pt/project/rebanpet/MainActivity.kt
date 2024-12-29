@@ -1,5 +1,6 @@
 package pt.project.rebanpet
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
@@ -13,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation
 import pt.project.rebanpet.fragments.HistoricalFragment
 import pt.project.rebanpet.fragments.InfoFragment
@@ -79,7 +81,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         when(item.itemId){
             R.id.nav_home -> {
                 replaceFragment(HomeFragment())
-                title = "Rebanpet"
+                title = "Denúncia"
             }
             R.id.nav_profile -> {
                 replaceFragment(ProfileFragment())
@@ -88,6 +90,12 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
             R.id.nav_settings -> {
                 replaceFragment(SettingsFragment())
                 title = "Definições"
+            }
+            R.id.nav_logout -> {
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this@MainActivity,LoginActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

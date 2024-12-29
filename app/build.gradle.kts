@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -35,6 +36,7 @@ android {
     }
     buildFeatures{
         dataBinding = true
+        viewBinding = true
     }
 }
 
@@ -47,6 +49,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.curvedbottomnavigation)
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
