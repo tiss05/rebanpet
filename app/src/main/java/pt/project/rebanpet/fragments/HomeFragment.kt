@@ -29,7 +29,7 @@ class HomeFragment : Fragment(){
             CurvedBottomNavigation.Model(1, "Histórico", R.drawable.baseline_list_alt_24)
         )
         bottomNavigation.add(
-            CurvedBottomNavigation.Model(2, "Denunciar", R.drawable.baseline_add_circle_outline_24)
+            CurvedBottomNavigation.Model(2, "Denúncia", R.drawable.baseline_add_circle_outline_24)
         )
         bottomNavigation.add(
             CurvedBottomNavigation.Model(3, "Info", R.drawable.baseline_info_24)
@@ -39,14 +39,18 @@ class HomeFragment : Fragment(){
             when (it.id) {
                 1 -> {
                     replaceFragment(HistoricalFragment())
+                    activity?.title = "Histórico"
                 }
 
                 2 -> {
                     replaceFragment(ReportFragment())
+                    activity?.title = "Denúncia"
                 }
 
                 3 -> {
                     replaceFragment(InfoFragment())
+                    activity?.title = "Informações Gerais"
+
                 }
             }
         }

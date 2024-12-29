@@ -3,17 +3,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#009688"
-    tools:context=".fragments.SettingsFragment">
+    tools:context=".fragments.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="PERFIL"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="36sp"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            tools:srcCompat="@tools:sample/avatars" />
 
+        <TextView
+            android:id="@+id/titleNameProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Nome: "/>
+
+        <TextView
+            android:id="@+id/contentNameProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Roberto Lopes"/>
+
+        <TextView
+            android:id="@+id/titleAddressProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Morada: "/>
+
+
+        <TextView
+            android:id="@+id/contentAddressProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Estrada Nacional 2"/>
+
+        <TextView
+            android:id="@+id/titleContactProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Contato: "/>
+
+        <TextView
+            android:id="@+id/contentContactProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="962147536"/>
+
+        <TextView
+            android:id="@+id/titleEmailProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Email: "/>
+
+        <TextView
+            android:id="@+id/contentEmailProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="roberto.lopes@gmail.com"/>
+
+
+    </LinearLayout>
 </FrameLayout>

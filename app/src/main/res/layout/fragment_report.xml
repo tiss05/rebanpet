@@ -3,17 +3,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF9800"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".fragments.ReportFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="REPORTAR"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="36sp"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/titleDescriptionAnimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição do animal"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descrição"
+            android:layout_margin="10dp"
+            android:inputType="text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/titleLocationAnimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:text="Localização"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Local"
+            android:inputType="text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/titlePhotoAnimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:text="Foto do animal"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/photoAnimal"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/border_image"
+            android:padding="10dp"
+            android:src="@drawable/ic_logo" />
+
+        <CheckBox
+            android:id="@+id/checkBoxEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:textSize="14sp"
+            android:text="Deseja receber uma cópia da denúncia por email?" />
+
+        <Button
+            android:id="@+id/buttonAddUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Denunciar"
+            android:layout_margin="20dp"
+            android:textSize="15sp"
+            android:theme="@style/ThemeOverlay.Material3.Dark"
+            app:cornerRadius="12dp"/>
+
+    </LinearLayout>
 
 </FrameLayout>

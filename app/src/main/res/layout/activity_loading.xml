@@ -12,7 +12,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/logoImage"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -20,13 +20,17 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/logo" />
+            android:src="@drawable/ic_logo"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Rebanpet"
+            android:text="R e b a n p e t"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
             android:textSize="24sp" />
     </LinearLayout>
 
