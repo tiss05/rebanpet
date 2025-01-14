@@ -10,6 +10,7 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="light_green_700">#388E3C</color>
 
     <color name="rippleColor">#03FF72</color>
     <color name="indicatorColor">#03FF72</color>

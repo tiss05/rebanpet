@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -71,22 +72,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun signinWithFirebase(userEmail:String, userPassword:String){
-        //if(!userEmail.isBlank()) {
+        if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
             auth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this) { task ->
 
                     if (task.isSuccessful) {
 
-                        Toast.makeText(
+                        /*Toast.makeText(
                             applicationContext,
                             "Login is successful",
                             Toast.LENGTH_SHORT
-                        ).show()
+                        ).show()*/
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(intent)
                         finish()
+                    }
 
-                    } else {
+                }
+        } else {
 
                         Toast.makeText(
                             applicationContext,
@@ -94,10 +97,8 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }
-
-                //}
         }
+
     }
 
 
@@ -161,4 +162,19 @@ class LoginActivity : AppCompatActivity() {
 
         }
     }
+
+    /*override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Rebanpet")
+        builder.setIcon(R.mipmap.ic_logo)
+        builder.setMessage("Deseja sair da aplicação?")
+        builder.setPositiveButton("Sim") { _, _ ->
+            super.onBackPressed()
+        }
+        builder.setNegativeButton("Não") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.setCancelable(false)
+        builder.show()
+    }*/
 }

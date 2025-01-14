@@ -12,7 +12,6 @@ class ReportAdapter(
 
     inner class ReportViewHolder(val adapterBinding: ReportItemBinding) :
         RecyclerView.ViewHolder(adapterBinding.root) {
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
@@ -31,9 +30,10 @@ class ReportAdapter(
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
 
-        holder.adapterBinding.contentLocal.text = reportList[position].reportName
-        //holder.adapterBinding.contentDate.text = reportList[position].userAge.toString()
-        holder.adapterBinding.contentDate.text = reportList[position].reportLocal
+        holder.adapterBinding.contentAnimal.text = reportList[position].reportDescription
+        //holder.adapterBinding.contentDate.text = reportList[position].reportDescription.tim
+        holder.adapterBinding.contentLocal.text = reportList[position].reportLocal
+        holder.adapterBinding.contentDate.text = reportList[position].reportDateTime
 
         /*holder.adapterBinding.linearLayout.setOnClickListener {
 

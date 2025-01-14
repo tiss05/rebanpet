@@ -3,14 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF9800"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragmentHistorical"
+    android:background="@color/white"
     tools:context=".fragments.HistoricalFragment">
 
+    <ImageButton
+        android:id="@+id/infoButton"
+        android:layout_margin="5dp"
+        android:layout_gravity="right"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:scaleType="fitCenter"
+        android:background="@color/white"
+        android:src="@drawable/baseline_info_24"
+        app:tint="@android:color/darker_gray"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp">
+        android:padding="16dp">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -68,4 +69,20 @@ class HomeFragment : Fragment(){
             .commit()
 
     }
+
+    /*override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Rebanpet")
+        builder.setIcon(R.mipmap.ic_logo)
+        builder.setMessage("Deseja sair da aplicação?")
+        builder.setPositiveButton("Sim") { _, _ ->
+            super.onBackPressed()
+        }
+        builder.setNegativeButton("Não") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.setCancelable(false)
+        builder.show()
+    }*/
+
 }
