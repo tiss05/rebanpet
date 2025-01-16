@@ -31,7 +31,6 @@ class ReportAdapter(
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
 
         holder.adapterBinding.contentAnimal.text = reportList[position].reportDescription
-        //holder.adapterBinding.contentDate.text = reportList[position].reportDescription.tim
         holder.adapterBinding.contentLocal.text = reportList[position].reportLocal
         holder.adapterBinding.contentDate.text = reportList[position].reportDateTime
 

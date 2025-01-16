@@ -91,14 +91,12 @@ class LoginActivity : AppCompatActivity() {
                 }
         } else {
 
-                        Toast.makeText(
-                            applicationContext,
-                            "O teu e-mail ou palavra-passe estão incorretos",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+            Toast.makeText(
+                applicationContext,
+                "O teu e-mail ou palavra-passe estão incorretos",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-
     }
 
 

@@ -1,20 +1,25 @@
 package pt.project.rebanpet.fragments
 
-
-import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.health.connect.datatypes.ExerciseRoute
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil.setContentView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
@@ -24,9 +29,30 @@ import pt.project.rebanpet.databinding.FragmentReportBinding
 import pt.project.rebanpet.report.Report
 import pt.project.rebanpet.databinding.CustomAlertDialogBinding
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
+import android.provider.Settings
+import android.util.Log
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.firebase.database.core.Tag
+import java.io.IOException
+import java.util.Locale
+import java.util.*
+
 
 class ReportFragment : Fragment() {
 
@@ -35,6 +61,14 @@ class ReportFragment : Fragment() {
     val database : FirebaseDatabase = FirebaseDatabase.getInstance()
     val myReference : DatabaseReference = database.reference.child("MyReports")
     lateinit var mRef : DatabaseReference
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val permissionId = 2
+    private lateinit var btnFetchLocation: Button
+    private lateinit var tvLocation: TextView
+
+    companion object {
+        const val LOCATION_REQUEST_CODE = 1
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,16 +82,64 @@ class ReportFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        reportBinding.buttonGetLocation.setOnClickListener {
+            getLocationn()
+        }
+
         reportBinding.buttonAddUser.setOnClickListener {
             addReportToDatabase()
         }
     }
 
+    private fun getLocationn() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            return
+        }
+
+
+        val locationTask: Task<Location> = fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+        locationTask.addOnSuccessListener { location ->
+            if (location != null) {
+                getAddressFromLocation(location)
+            } else {
+                reportBinding.contentLocalAnimal.text =
+                    "Tente novamente! Verifique se a localização está ativada."
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Falha na localização", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getAddressFromLocation(location: Location) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addresses: List<Address>? = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address = addresses[0]
+                reportBinding.contentLocalAnimal.text = address.getAddressLine(0)
+            } else {
+                reportBinding.contentLocalAnimal.text = "Localização não encontrada"
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            reportBinding.contentLocalAnimal.text = "Erro de procura de localização"
+        }
+    }
 
     fun addReportToDatabase(){
 
-        val descriptionAnimal : String = reportBinding.editTextName.text.toString()
-        val localAnimal : String = reportBinding.editTextAge.text.toString()
+        val descriptionAnimal : String = reportBinding.contentDescriptionAnimal.text.toString()
+        val localAnimal : String = reportBinding.contentLocalAnimal.text.toString()
 
         val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
         val currentDateTime = sdf.format(Date())
@@ -73,10 +155,6 @@ class ReportFragment : Fragment() {
             mRef.child(id).setValue(report).addOnCompleteListener { task ->
 
                 if (task.isSuccessful) {
-                    /*Toast.makeText(context,
-                    "The new report has been added to the database",
-                    Toast.LENGTH_SHORT).show()*/
-                    //finish()
                     clearInputs()
                     showDialogMessage()
                 }
@@ -93,27 +171,9 @@ class ReportFragment : Fragment() {
     }
 
     private fun clearInputs() {
-        reportBinding.editTextName.text.clear()
-        reportBinding.editTextAge.text.clear()
+        reportBinding.contentDescriptionAnimal.text.clear()
+        //reportBinding.contentLocalAnimal.text.clear()
     }
-
-    /*private fun showCustomAlertDialog() {
-        val dialogBinding = DialogCustomBinding.inflate(layoutInflater)
-
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-            .setView(dialogBinding.root)
-            .setCancelable(true)
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        // Optional: Set custom click behavior for the dialog
-        dialogBinding.textViewDialogMessage.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
-    }*/
 
     private fun showDialogMessage() {
 
@@ -130,7 +190,6 @@ class ReportFragment : Fragment() {
         dialogBinding.dialogMessage.text = "Adicionada no histórico de denúncias"
 
         dialogBinding.btnDone.setOnClickListener { //dialog, _ ->
-            /*Toast.makeText(context, "You clicked OK!", Toast.LENGTH_SHORT).show()*/
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentReport, HistoricalFragment())
             fragmentTransaction.addToBackStack(null)  // Enables back navigation
@@ -142,30 +201,8 @@ class ReportFragment : Fragment() {
             dialog.dismiss()
         }*/
 
-        // Show the AlertDialog
         alertDialog.show()
 
-        /*val dialogMessage = AlertDialog.Builder(requireContext())
-        dialogMessage.setTitle("Sair")
-        dialogMessage.setMessage("Tem a certeza?")
-        dialogMessage.setNegativeButton("No", DialogInterface.OnClickListener {
-                dialogInterface, i -> dialogInterface.cancel()
-        })
-        dialogMessage.setPositiveButton("Yes", DialogInterface.OnClickListener {
-                dialogInterface, i -> myReference.removeValue().addOnCompleteListener{ task ->
-            if(task.isSuccessful){
-                /*FirebaseAuth.getInstance().signOut()
-                val intent = Intent(this@MainActivity,LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-                usersAdapter.notifyDataSetChanged()*/
-                Toast.makeText(context,"Denuncia feita", Toast.LENGTH_SHORT).show()
-            }
-        }
-        })
-
-        dialogMessage.create().show()*/
 
     }
-
 }
