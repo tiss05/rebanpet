@@ -56,6 +56,7 @@
             android:id="@+id/buttonGetLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_marginEnd="10dp"
             android:background="@android:color/transparent"
             android:src="@mipmap/ic_my_location"/>
@@ -82,24 +83,31 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/buttonPhotoAnimal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:src="@mipmap/ic_photo_camera"/>
+
         <ImageView
             android:id="@+id/photoAnimal"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="200dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/border_image"
             android:padding="10dp"
+            android:background="@drawable/border_image"
+            android:scaleType="centerInside"
             android:src="@drawable/logo" />
-
-        <CheckBox
-            android:id="@+id/checkBoxEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:textSize="14sp"
-            android:text="Deseja receber uma cópia da denúncia por email?" />
+    </LinearLayout>
 
         <Button
             android:id="@+id/buttonAddUser"
@@ -108,7 +116,7 @@
             android:text="Denunciar"
             android:layout_margin="20dp"
             android:textSize="15sp"
-            android:theme="@style/ThemeOverlay.Material3.Dark"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:cornerRadius="12dp"/>
 
     </LinearLayout>

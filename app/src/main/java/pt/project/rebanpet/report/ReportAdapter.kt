@@ -3,6 +3,7 @@ package pt.project.rebanpet.report
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import pt.project.rebanpet.databinding.ReportItemBinding
 import pt.project.rebanpet.fragments.HistoricalFragment
 
@@ -15,35 +16,24 @@ class ReportAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
-
         val binding = ReportItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return ReportViewHolder(binding)
-
     }
 
     override fun getItemCount(): Int {
-
         return reportList.size
 
     }
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
-
         holder.adapterBinding.contentAnimal.text = reportList[position].reportDescription
         holder.adapterBinding.contentLocal.text = reportList[position].reportLocal
         holder.adapterBinding.contentDate.text = reportList[position].reportDateTime
-
-        /*holder.adapterBinding.linearLayout.setOnClickListener {
-
-            val intent = Intent(context, UpdateUserActivity::class.java)
-            intent.putExtra("id", userList[position].userId)
-            intent.putExtra("name", userList[position].userName)
-            intent.putExtra("age", userList[position].userAge)
-            intent.putExtra("email", userList[position].userEmail)
-            context.startActivity(intent)
-
-        }*/
+        Glide.with(holder.adapterBinding.imageAnimal.context)
+            .load(reportList[position].reportPhotoUrl) // URL or file path
+            //.placeholder(R.drawable.placeholder) // Placeholder image
+            //.error(R.drawable.error) // Error image
+            .into(holder.adapterBinding.imageAnimal)
     }
 
     fun getReportId(position: Int): String {

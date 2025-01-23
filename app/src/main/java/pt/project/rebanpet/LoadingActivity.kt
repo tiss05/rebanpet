@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.VideoView
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -20,7 +19,7 @@ class LoadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_loading)
 
         videoView = findViewById(R.id.videoView)
-        val videoPath = "android.resource://" + packageName + "/" + R.raw.test4
+        val videoPath = "android.resource://" + packageName + "/" + R.raw.background_video
         val videoUri = Uri.parse(videoPath)
 
         videoView.setVideoURI(videoUri)

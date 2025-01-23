@@ -1,7 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Rebanpet" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your dark theme here. parent="Theme.Material3.DayNight.NoActionBar" -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.Rebanpet" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your night theme here. -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryVariant">@color/green</item>
+        <item name="android:statusBarColor">@color/quantum_grey700</item>
+    </style>
+
+    <style name="Theme.Rebanpet" parent="Base.Theme.Rebanpet" />
+
+    <style name="ShapeAppearance.Capsule" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>
