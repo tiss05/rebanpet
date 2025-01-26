@@ -3,24 +3,17 @@ package pt.project.rebanpet
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import pt.project.rebanpet.databinding.ActivityLoginBinding
 import pt.project.rebanpet.databinding.ActivityResetPasswordBinding
 
 class ResetPasswordActivity : AppCompatActivity() {
     lateinit var resetPassowordBinding : ActivityResetPasswordBinding
     val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         resetPassowordBinding = ActivityResetPasswordBinding.inflate(layoutInflater)
         val view = resetPassowordBinding.root
         setContentView(view)

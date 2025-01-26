@@ -22,7 +22,6 @@ class ReportAdapter(
 
     override fun getItemCount(): Int {
         return reportList.size
-
     }
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
@@ -30,7 +29,7 @@ class ReportAdapter(
         holder.adapterBinding.contentLocal.text = reportList[position].reportLocal
         holder.adapterBinding.contentDate.text = reportList[position].reportDateTime
         Glide.with(holder.adapterBinding.imageAnimal.context)
-            .load(reportList[position].reportPhotoUrl) // URL or file path
+            .load(reportList[position].reportPhotoUrl)
             //.placeholder(R.drawable.placeholder) // Placeholder image
             //.error(R.drawable.error) // Error image
             .into(holder.adapterBinding.imageAnimal)
