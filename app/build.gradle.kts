@@ -29,7 +29,7 @@ android {
             )
 
         }
-4
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -38,13 +38,25 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
     buildFeatures{
         dataBinding = true
         viewBinding = true
+        compose = true
     }
 }
 
 dependencies {
+
+    implementation ("androidx.compose.ui:ui:1.7.7")
+    implementation ("androidx.compose.material:material:1.7.7")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.7.7")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation ("androidx.compose.compiler:compiler:1.5.15")
+    implementation ("androidx.activity:activity-compose:1.10.0")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.7.7")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
