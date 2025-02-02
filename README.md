@@ -1,4 +1,4 @@
-# 🐾 Abandoned Pets Alert App
+# 🐾 Rebanpet App
 
 A mobile application in course that helps users report and locate abandoned pets on the streets. 
 Built with **Kotlin**, **Jetpack Compose**, **Firebase**, and **Google Maps API**, the application aims to minimize animal abandonment and animal welfare.
