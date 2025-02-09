@@ -39,7 +39,7 @@ android {
         jvmTarget = "11"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     buildFeatures{
         dataBinding = true
@@ -50,13 +50,25 @@ android {
 
 dependencies {
 
-    implementation ("androidx.compose.ui:ui:1.7.7")
+    implementation (libs.androidx.ui)
+    implementation("androidx.compose.ui:ui-graphics")
     implementation ("androidx.compose.material:material:1.7.7")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.7.7")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation ("androidx.compose.compiler:compiler:1.5.15")
     implementation ("androidx.activity:activity-compose:1.10.0")
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.7")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3:1.3.1")
+
+    // Google Maps Compose
+    implementation("com.google.maps.android:maps-compose:2.11.4") // Check for latest version
+
+
+    // Lifecycle for handling MapView lifecycle in Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Or latest lifecycle version
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
