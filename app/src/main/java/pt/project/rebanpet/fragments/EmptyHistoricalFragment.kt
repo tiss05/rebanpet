@@ -12,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import pt.project.rebanpet.R
 import pt.project.rebanpet.databinding.FragmentHistoricalBinding
 import pt.project.rebanpet.report.Report
-import pt.project.rebanpet.report.ReportAdapter
 import pt.project.rebanpet.databinding.FragmentEmptyBinding
+import pt.project.rebanpet.report.ReportAdapter
 
 class EmptyHistoricalFragment : Fragment()  {
 

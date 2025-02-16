@@ -60,16 +60,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.7")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.3.1")
-
-    // Google Maps Compose
-    implementation("com.google.maps.android:maps-compose:2.11.4") // Check for latest version
-
-
-    // Lifecycle for handling MapView lifecycle in Compose
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Or latest lifecycle version
-
-
-
+    implementation("com.google.maps.android:maps-compose:2.11.5")
+    implementation("com.google.maps.android:android-maps-utils:3.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
