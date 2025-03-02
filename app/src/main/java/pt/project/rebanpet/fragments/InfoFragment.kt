@@ -15,7 +15,6 @@ class InfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_info, container, false)
         return ComposeView(requireContext()).apply {
             setContent {
                 MapKennels()

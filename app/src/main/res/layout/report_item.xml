@@ -34,7 +34,8 @@
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_image_report"
                 android:clipToOutline="true"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:shapeAppearanceOverlay="@style/RoundedSquare"
+                android:src="@mipmap/ic_photo_camera"/>
 
             <LinearLayout
                 android:orientation="vertical"
