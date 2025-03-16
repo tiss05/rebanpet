@@ -3,26 +3,17 @@ package pt.project.rebanpet
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
 import pt.project.rebanpet.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import pt.project.rebanpet.navigation.NavigationDrawer
 
 class LoginActivity : AppCompatActivity() {
 
@@ -83,7 +74,8 @@ class LoginActivity : AppCompatActivity() {
                             "Login is successful",
                             Toast.LENGTH_SHORT
                         ).show()*/
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        //val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        val intent = Intent(this@LoginActivity, NavigationDrawer::class.java)
                         startActivity(intent)
                         finish()
                     }
@@ -138,7 +130,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            val intent = Intent(this, MainActivity::class.java)
+            //val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, NavigationDrawer::class.java)
             intent.putExtra("name", user.displayName)
             intent.putExtra("email", user.email)
             intent.putExtra("photoUrl", user.photoUrl.toString())
@@ -154,7 +147,8 @@ class LoginActivity : AppCompatActivity() {
 
         if(user != null){
 
-            val intent = Intent(this@LoginActivity,MainActivity::class.java)
+            //val intent = Intent(this@LoginActivity,MainActivity::class.java)
+            val intent = Intent(this@LoginActivity,NavigationDrawer::class.java)
             startActivity(intent)
             finish()
 

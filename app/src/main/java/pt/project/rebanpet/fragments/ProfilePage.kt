@@ -1,27 +1,36 @@
-package pt.project.rebanpet
+package pt.project.rebanpet.fragments
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pt.project.rebanpet.R
+
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(innerPadding: PaddingValues) {
     Column(
         modifier = Modifier
+            .padding(innerPadding)
             .fillMaxSize()
             .padding(10.dp),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -44,7 +53,7 @@ fun ProfileScreen() {
                 .fillMaxWidth()
                 .padding(top = 50.dp)
         ) {
-            Text(text = "Eliminar conta", color = Color.White)
+            androidx.compose.material.Text(text = "Eliminar conta", color = Color.White)
         }
     }
 }
@@ -57,14 +66,14 @@ fun ProfileInfoRow(label: String, value: String) {
             .padding(top = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        androidx.compose.material.Text(
             text = label,
             fontFamily = FontFamily(Font(R.font.montserrat_bold)),
             color = Color.Black,
             fontSize = 15.sp,
             modifier = Modifier.padding(start = 24.dp, top = 24.dp)
         )
-        Text(
+        androidx.compose.material.Text(
             text = value,
             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
             color = Color.Black,

@@ -18,7 +18,7 @@ import pt.project.rebanpet.kennels.KennelsDistricts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapKennels() {
+fun MapKennel() {
     val countryCoordinates = LatLng(39.3999, -8.2245)
     var selectedCountry by remember { mutableStateOf(
         KennelsDistricts
