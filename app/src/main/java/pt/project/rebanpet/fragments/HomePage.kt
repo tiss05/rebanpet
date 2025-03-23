@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -30,8 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
@@ -49,20 +46,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
+import pt.project.rebanpet.R
 
 
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     val navItemList = listOf(
-        BotNav("Histórico", Icons.Filled.List,0),
-        BotNav("Denunciar", Icons.Filled.AddCircle,0),
-        BotNav("Info", Icons.Filled.Info,0),
+        BotNav("Histórico", R.drawable.list_outline,0),
+        BotNav("Denunciar", R.drawable.plus_outline,0),
+        BotNav("Info", R.drawable.info_circle_outline,0),
     )
 
     var selectedIndex by remember {
@@ -125,7 +122,11 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                             Text(text = navItem.badgeCount.toString())
                                         }
                                 }) {
-                                    Icon(imageVector = navItem.icon, contentDescription = "Icon")
+                                    Icon(
+                                        painter = painterResource(id = navItem.icon),
+                                        modifier = Modifier.size(24.dp),
+                                        contentDescription = "Icon"
+                                    )
                                 }
 
                             },
@@ -147,9 +148,9 @@ fun HomeScreen(innerPadding: PaddingValues) {
 
 
 data class BotNav(
-    val label : String,
-    val icon : ImageVector,
-    val badgeCount : Int
+    val label: String,
+    val icon: Int,
+    val badgeCount: Int
 )
 
 

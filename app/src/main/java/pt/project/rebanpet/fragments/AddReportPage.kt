@@ -28,7 +28,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-//import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -51,8 +50,10 @@ import pt.project.rebanpet.report.Report
 import java.io.IOException
 import java.text.SimpleDateFormat
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.core.content.ContextCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,8 +75,6 @@ fun AddReportPage() {
         mutableStateOf<Uri?>(null)
     }
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
     val context = LocalContext.current
 
     // Launcher for picking an image from the gallery
@@ -85,7 +84,7 @@ fun AddReportPage() {
         photoAnimal = uri
     }
 
-    fun cleanInputs(){
+    fun clearInputs(){
         descriptionAnimal = ""
         locationAnimal = ""
         photoAnimal = null
@@ -140,29 +139,19 @@ fun AddReportPage() {
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 GetLocationButton(onLocationUpdated = { location ->
                     locationAnimal = location
                 })
-                /*IconButton(
-                    onClick = {
-                        //locationAnimal = GetLocation()
-                        GetLocationButton(onLocationUpdated = { location ->
-                            locationAnimal = location
-                        })
-                }) {
-                    Image(
-                        painter = painterResource(id = R.mipmap.ic_my_location),
-                        contentDescription = "Get Location",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }*/
                 Text(
-                    text = "Local: $locationAnimal",
+                    text = "$locationAnimal",
                     modifier = Modifier
                         .weight(1f)
-                        .padding(top = 10.dp),
+                        .padding(top = 10.dp, bottom = 10.dp, end = 8.dp)
+                        .border(1.dp, Color.LightGray, shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+                        .padding(8.dp),
                     style = TextStyle(fontSize = 15.sp)
                 )
             }
@@ -195,7 +184,7 @@ fun AddReportPage() {
                     )
                 }*/
                 GalleryAccessButton(onImageSelected = { uri ->
-                    selectedImageUri = uri
+                    photoAnimal = uri
                     // Do something with the selected image URI, e.g., upload it
                     if (uri != null) {
                         Toast.makeText(context, "Imagem selecionada: $uri", Toast.LENGTH_SHORT).show()
@@ -209,10 +198,10 @@ fun AddReportPage() {
                         .padding(10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (selectedImageUri != null) {
+                    if (photoAnimal != null) {
                         Text("Imagem Selecionada:")
                         AsyncImage(
-                            model = selectedImageUri,
+                            model = photoAnimal,
                             contentDescription = "Selected Image",
                             modifier = Modifier
                                 .size(200.dp)
@@ -225,11 +214,11 @@ fun AddReportPage() {
                         )
                     } else {
                         Image(
-                        painter = painterResource(id = R.drawable.default_photo_report),
-                        contentDescription = "Animal Photo",
-                        modifier = Modifier.size(200.dp),
-                        alignment = Alignment.CenterStart,
-                        contentScale = ContentScale.Crop
+                            painter = painterResource(id = R.drawable.default_photo_report),
+                            contentDescription = "Animal Photo",
+                            modifier = Modifier.size(200.dp),
+                            alignment = Alignment.CenterStart,
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
@@ -238,9 +227,9 @@ fun AddReportPage() {
             // Section "Button to add report"
             Button(
                 onClick = {
-                    saveDataToFirebase(descriptionAnimal, locationAnimal, photoAnimal, onSuccess = {
-                        cleanInputs()
-                    })
+                    saveDataToFirebase(context, descriptionAnimal, locationAnimal, photoAnimal)
+                    clearInputs()
+                    Toast.makeText(context, "Denúncia concluída com sucesso!", Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -256,104 +245,68 @@ fun AddReportPage() {
     }
 }
 
+fun saveDataToFirebase(context: Context, description: String, location: String, imageUri: Uri?) {
+    if (description.isBlank() || location.isBlank() || imageUri == null) {
+        if (description.isBlank()) {
+            Toast.makeText(context, "Falta a descrição do animal", Toast.LENGTH_SHORT).show()
+        }
+        else if (location.isBlank()) {
+            Toast.makeText(context, "Falta a localização do animal", Toast.LENGTH_SHORT).show()
+        }
+        else if (imageUri == null) {
+            Toast.makeText(context, "Falta a fotografia do animal", Toast.LENGTH_SHORT).show()
+        }
+        return
+    }
 
-fun saveDataToFirebase(description: String, location: String, imageUri: Uri?,onSuccess: () -> Unit) {
     val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
     val db = FirebaseDatabase.getInstance()
     val storage = FirebaseStorage.getInstance()
-    val storageRef = storage.reference
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
-    val firebaseRef = FirebaseDatabase.getInstance().getReference("reports/${currentUser?.uid}")
-    val storageRefe = FirebaseStorage.getInstance().getReference("images/${currentUser?.uid}")
-    //val context = LocalContext.current
 
+    if (currentUser == null) {
+        Log.e("Firebase", "User not authenticated")
+        return
+    }
 
+    val userId = currentUser.uid
+    val firebaseRef = db.getReference("reports/$userId")
+    val storageRef = storage.reference.child("images/$userId")
     val currentDateTime = sdf.format(Date())
-
-    //val id : String = myReference.push().key.toString()
     val reportId = firebaseRef.push().key!!
-    var report : Report
 
 
+    val imageRef = storageRef.child("reports/$reportId")
+    val uploadTask = imageRef.putFile(imageUri)
 
-    /*if (currentUser != null) {
-        firebaseRef = FirebaseDatabase.getInstance().getReference("reports/${currentUser.uid}")
-        storageRefe = FirebaseStorage.getInstance().getReference("images/${currentUser.uid}")
-    }*/
+    uploadTask.addOnSuccessListener { taskSnapshot ->
+        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageUrl ->
+            val reportDetails = Report(
+                reportId,
+                description,
+                location,
+                currentDateTime,
+                imageUrl.toString()
+            )
 
-    /*if (description.isNotEmpty() && location.isNotEmpty() && imageUri != null) {
-        imageUri.let{
-            storageRefe.child(reportId).putFile(it)
-                .addOnSuccessListener { task ->
-                    task.metadata!!.reference!!.downloadUrl
-                        .addOnSuccessListener { url ->
-                            val imgUrl = url.toString()
-
-                            report = Report(
-                                reportId,
-                                description,
-                                location,
-                                currentDateTime,
-                                imgUrl
-                            )
-
-                            firebaseRef.child(reportId).setValue(report)
-                                .addOnCompleteListener { task ->
-
-                                    if (task.isSuccessful) {
-                                        //clearInputs()
-                                        //showDialogMessage()
-
-
-                                    }
-                                }
-                                .addOnFailureListener { error ->
-                                    Toast.makeText(
-                                        context,
-                                        "erro: ${error.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                        }
+            firebaseRef.child(reportId).setValue(reportDetails)
+                .addOnSuccessListener {
+                    Log.d("ReportData", "Report ID: $reportId")
+                    Log.d("ReportData", "Descrição: $description")
+                    Log.d("ReportData", "Localização: $location")
+                    Log.d("ReportData", "Data: $currentDateTime")
+                    Log.d("ReportData", "Image URL: $imageUrl")
                 }
+                .addOnFailureListener { e ->
+                    Log.e("FirebaseDatabase", "Erro!")
+                }
+
+        }?.addOnFailureListener { e ->
+            Log.w("Firebase", "Erro nos dados da denúncia.")
         }
-    } else {
-        Toast.makeText(
-            context,
-            "Dados em falta ou incorretos",
-            Toast.LENGTH_SHORT
-        ).show()
-    }*/
-
-    imageUri?.let { uri ->
-        val imageRef = storageRef.child("images/${UUID.randomUUID()}")
-        //val uploadTask = imageRef.putFile(uri)
-        val uploadTask = storageRef.child("reports/$reportId").putFile(uri)
-
-        uploadTask.addOnSuccessListener { task ->
-            task.metadata?.reference?.downloadUrl?.addOnSuccessListener { url ->
-                // Save data to Firestore
-                val imgUrl = url.toString()
-                val reportDet = Report(
-                    reportId,
-                    description,
-                    location,
-                    currentDateTime,
-                    imgUrl
-                )
-
-                firebaseRef.child(reportId).setValue(reportDet)
-                    .addOnSuccessListener {
-                        // Handle success
-                    }
-                    .addOnFailureListener {
-                        // Handle failure
-                    }
-            }
-        }.addOnFailureListener {
-            // Handle image upload failure
-        }
+    }.addOnFailureListener { e ->
+        Log.w("Firebase", "Erro da imagem da denúncia.")
     }
 }
 
@@ -363,7 +316,6 @@ fun GetLocationButton(onLocationUpdated: (String) -> Unit) {
     val fusedLocationClient: FusedLocationProviderClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
-    var locationAnimal by remember { mutableStateOf("Lat: 0.0, Long: 0.0") }
 
     val locationPermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -398,7 +350,6 @@ private fun getLocation(
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        // Permission should be requested before calling this function
         Toast.makeText(context, "Permissão de localização não concedida", Toast.LENGTH_SHORT).show()
         return
     }
@@ -489,7 +440,6 @@ fun GalleryAccessButton(onImageSelected: (Uri?) -> Unit) {
         )
     }
 
-    // Optional: Display the selected image
     /*
     if (imageUri != null) {
         AsyncImage(model = imageUri, contentDescription = "Selected Image")

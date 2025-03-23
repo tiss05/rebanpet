@@ -48,7 +48,7 @@ fun MapKennel() {
                     readOnly = true,
                     value = selectedCountry.name,
                     onValueChange = {},
-                    label = { Text("Canis disponíveis do distrito de") },
+                    label = { Text("Canis disponíveis no distrito de") },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },

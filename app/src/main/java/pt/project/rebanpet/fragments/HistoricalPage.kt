@@ -1,8 +1,7 @@
 package pt.project.rebanpet.fragments
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,8 +25,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.draw.clip
@@ -37,6 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import pt.project.rebanpet.report.Report
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.text.style.TextOverflow
+import pt.project.rebanpet.R
 
 
 @Composable
@@ -70,13 +77,12 @@ fun ListReports() {
 
                 override fun onCancelled(error: DatabaseError) {
                     isLoading = false
-                    // Handle error, maybe set isEmpty to true or show an error message
-                    isEmpty = true // Consider showing an error message instead of just empty state
+                    isEmpty = true
                 }
             })
         } else {
             isLoading = false
-            isEmpty = true // No user logged in, treat as empty
+            isEmpty = true
         }
     }
 
@@ -120,23 +126,40 @@ fun ListReports() {
 
 @Composable
 fun ReportList(reports: List<Report>) {
+    var selectedReport by remember { mutableStateOf<Report?>(null) }
     LazyColumn(
         contentPadding = PaddingValues(6.dp)
     ) {
         items(reports) { report ->
-            ReportItem(report = report)
+            ReportItem(
+                report = report,
+                onClick = {
+                    selectedReport = report
+                }
+            )
         }
+    }
+    selectedReport?.let { report ->
+        ReportDialog(
+            report = report,
+            onDismiss = {
+                selectedReport = null
+            }
+        )
     }
 }
 
 @Composable
-fun ReportItem(report: Report) {
-    Card(
+fun ReportItem(report: Report, onClick: () -> Unit) {
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(7.dp)
+            .clickable(onClick = onClick)
             .background(Color.Transparent),
+        border = BorderStroke(1.dp, Color.LightGray),
         shape = RoundedCornerShape(7.dp),
+        //colors = CardDefaults.outlinedCardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -159,18 +182,22 @@ fun ReportItem(report: Report) {
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            // Text Content
+            // Report Content
             Column(
                 modifier = Modifier.weight(1f)
             ) {
                 // Local
-                Row {
-                    Text(
-                        text = "Local: ",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = "Local",
+                        tint = Color.Red,
+                        modifier = Modifier.size(18.dp)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = report.reportLocal,
                         fontSize = 12.sp,
@@ -182,13 +209,17 @@ fun ReportItem(report: Report) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Date
-                Row {
-                    Text(
-                        text = "Data: ",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = "Date",
+                        tint = Color.DarkGray,
+                        modifier = Modifier.size(18.dp)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = report.reportDateTime,
                         fontSize = 12.sp,
@@ -200,20 +231,135 @@ fun ReportItem(report: Report) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Description
-                Row {
-                    Text(
-                        text = "Descrição: ",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.paw),
+                        contentDescription = "Description",
+                        tint = Color.Black,
+                        modifier = Modifier.size(18.dp)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = report.reportDescription,
                         fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black,
-                        modifier = Modifier.fillMaxWidth()
+                        color = Color.Black
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ReportDialog(report: Report, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Box {
+                IconButton(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_back), 
+                        contentDescription = "Close",
+                        tint = Color.Black
+                    )
+                }
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Image(
+                        painter = rememberImagePainter(data = report.reportPhotoUrl),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = report.reportDescription,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.LocationOn,
+                            contentDescription = "Location",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = report.reportLocal,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.DateRange,
+                            contentDescription = "DateTime",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = report.reportDateTime,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(
+                            onClick = onDismiss,
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "Edit",
+                                tint = Color.Blue
+                            )
+                        }
+
+                        IconButton(
+                            onClick = onDismiss,
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Delete",
+                                tint = Color.Red
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -229,11 +375,12 @@ fun EmptyHistoricalScreen() {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "No reports available yet.",
-            style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "Sem denúncias",
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
