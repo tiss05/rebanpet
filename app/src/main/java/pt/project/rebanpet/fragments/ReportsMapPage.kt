@@ -1,7 +1,5 @@
 package pt.project.rebanpet.fragments
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,19 +32,36 @@ import pt.project.rebanpet.report.Report
 import android.content.Context
 import android.location.Geocoder
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import coil.compose.AsyncImage
 import com.google.firebase.database.FirebaseDatabase
 import com.google.maps.android.compose.*
 import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import androidx.compose.ui.unit.dp
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import pt.project.rebanpet.R
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.model.BitmapDescriptor
 
 
 @Composable
@@ -125,12 +140,58 @@ fun ReportsMapScreen(innerPadding : PaddingValues) {
         reports.forEach { report ->
             val latLng = getLatLngFromAddress(context, report.reportLocal)
             latLng?.let {
-                Marker(
+                MarkerInfoWindowContent(
                     state = MarkerState(position = latLng),
-                    title = "Denúncia",
-                    snippet = report.reportDescription
-                )
+                    title = "Denúncia: ${report.reportDateTime}",
+                    snippet = report.reportDateTime,
+                    icon = resizeMarkerIcon(context, R.drawable.ic_marker_pet)
+                ) { marker ->
+                    Column(
+                        modifier = Modifier.padding(top = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Date/time
+                        Text(
+                            text = marker.title ?: "Denúncia",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+
+                        report.reportPhotoUrl?.let { url ->
+                            AsyncImage(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .size(200.dp)
+                                    .border(
+                                        BorderStroke(1.dp, Color.LightGray),
+                                        shape = RoundedCornerShape(4.dp)
+                                    ),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(url)
+                                    .crossfade(true)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .allowHardware(false)
+                                    .build(),
+                                contentDescription = "Report image",
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+fun resizeMarkerIcon(context: Context, resId: Int): BitmapDescriptor {
+    val originalBitmap = BitmapFactory.decodeResource(context.resources, resId)
+    val scaledBitmap = Bitmap.createScaledBitmap(
+        originalBitmap,
+        80,
+        80,
+        false
+    )
+    return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
 }

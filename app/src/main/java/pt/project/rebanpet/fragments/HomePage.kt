@@ -52,14 +52,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pt.project.rebanpet.R
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import pt.project.rebanpet.ui.theme.RebanpetThemee
 
 
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     val navItemList = listOf(
-        BotNav("Histórico", R.drawable.list_outline,0),
-        BotNav("Denunciar", R.drawable.plus_outline,0),
-        BotNav("Info", R.drawable.info_circle_outline,0),
+        BotNav("Histórico", R.drawable.list_outline, 0),
+        BotNav("Denunciar", R.drawable.plus_outline, 0),
+        BotNav("Info", R.drawable.info_circle_outline, 0),
     )
 
     var selectedIndex by remember {
@@ -74,51 +80,26 @@ fun HomeScreen(innerPadding: PaddingValues) {
 
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    val scrollState = rememberScrollState()
 
-    /*ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                DrawerContent()
-            }
-        }
-    ) {*/
-    Column(
-        modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
+    RebanpetThemee {
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            /*topBar = {
-                TopBar(
-                    currentRoute = currentRoute,
-                    items = navItemList,
-                    onOpenDrawer = {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    }
-                )
-            },*/
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+
             bottomBar = {
                 NavigationBar {
                     navItemList.forEachIndexed { index, navItem ->
                         NavigationBarItem(
-                            selected = selectedIndex == index ,
+                            selected = selectedIndex == index,
                             onClick = {
                                 selectedIndex = index
                             },
                             icon = {
                                 BadgedBox(badge = {
-                                    if(navItem.badgeCount>0)
-                                        Badge(){
+                                    if (navItem.badgeCount > 0)
+                                        Badge {
                                             Text(text = navItem.badgeCount.toString())
                                         }
                                 }) {
@@ -140,189 +121,20 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 }
             }
         ) { innerPadding ->
-            ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex)
-
+            ContentScreen(
+                modifier = Modifier
+                    .padding(innerPadding),
+                selectedIndex = selectedIndex
+            )
         }
     }
 }
-
 
 data class BotNav(
     val label: String,
     val icon: Int,
     val badgeCount: Int
 )
-
-
-@Composable
-fun DrawerContent(modifier: Modifier = Modifier){
-
-    /*Image(
-        painter = painterResource(R.drawable.ic_profile_tab),
-        contentDescription = null
-    )*/
-
-    Text(
-        text = "App Name",
-        fontSize = 24.sp,
-        modifier = Modifier.padding(16.dp)
-    )
-
-    HorizontalDivider()
-    Spacer(modifier = Modifier.height(4.dp))
-    NavigationDrawerItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Home,
-                contentDescription = "Inicio",
-                modifier = Modifier.padding(16.dp)
-            )
-        },
-        label = {
-            Text(
-                text = "Inicio",
-                fontSize = 17.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-        },
-        selected = false,
-        onClick = {}
-    )
-    Spacer(modifier = Modifier.height(4.dp))
-    NavigationDrawerItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.AccountCircle,
-                contentDescription = "Perfil",
-                modifier = Modifier.padding(16.dp)
-            )
-        },
-        label = {
-            Text(
-                text = "Perfil",
-                fontSize = 17.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-        },
-        selected = false,
-        onClick = {}
-    )
-    Spacer(modifier = Modifier.height(4.dp))
-    NavigationDrawerItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = "Mapa",
-                modifier = Modifier.padding(16.dp)
-            )
-        },
-        label = {
-            Text(
-                text = "Mapa",
-                fontSize = 17.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-        },
-        selected = false,
-        onClick = {}
-    )
-    Spacer(modifier = Modifier.height(4.dp))
-    NavigationDrawerItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.Settings,
-                contentDescription = "Definições",
-                modifier = Modifier.padding(16.dp)
-            )
-        },
-        label = {
-            Text(
-                text = "Definições",
-                fontSize = 17.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-        },
-        selected = false,
-        onClick = {}
-    )
-    HorizontalDivider()
-    Spacer(modifier = Modifier.height(4.dp))
-    NavigationDrawerItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Default.ExitToApp,
-                contentDescription = "Sair",
-                modifier = Modifier.padding(16.dp)
-            )
-        },
-        label = {
-            Text(
-                text = "Sair",
-                fontSize = 17.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-        },
-        selected = false,
-        onClick = {}
-    )
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(
-    onOpenDrawer: () -> Unit,
-    currentRoute: String?,
-    items: List<BotNav>
-){
-    val currentItem = items.find { it.label == currentRoute }
-    val title = currentItem?.label ?: "Rebanpet"
-
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.6f)
-        ),
-
-        navigationIcon = {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 8.dp)
-                    .size(28.dp)
-                    .clickable {
-                        onOpenDrawer()
-                    }
-            )
-        },
-        title = {
-            Text(text = title)
-        },
-        actions = {
-            Icon(
-                imageVector = Icons.Default.Notifications,
-                contentDescription = "Menu",
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable {
-                        onOpenDrawer()
-                    }
-            )
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Menu",
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 16.dp)
-                    .size(28.dp)
-                    .clickable {
-                        onOpenDrawer()
-                    }
-            )
-        }
-    )
-}
-
-
 
 @Composable
 fun ContentScreen(modifier: Modifier = Modifier, selectedIndex : Int) {

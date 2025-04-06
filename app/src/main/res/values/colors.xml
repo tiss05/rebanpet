@@ -12,6 +12,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="light_green_700">#388E3C</color>
 
+    <color name="green_100">#3bac4e</color>
+    <color name="green_200">#269245</color>
+    <color name="green_300">#249f50</color>
+    <color name="green_400">#27723e</color>
+
+    <color name="green_500">#4CAF50</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_3500">#A5D6A7</color>
+
     <color name="rippleColor">#03FF72</color>
     <color name="indicatorColor">#03FF72</color>
     <color name="backgroundColor">#FF5722</color>

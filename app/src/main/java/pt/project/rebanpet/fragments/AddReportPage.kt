@@ -53,7 +53,9 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.core.content.ContextCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -90,14 +92,13 @@ fun AddReportPage() {
         photoAnimal = null
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(top = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
             //Section "Description"
             Text(
@@ -242,7 +243,7 @@ fun AddReportPage() {
                 )
             }
         }
-    }
+
 }
 
 fun saveDataToFirebase(context: Context, description: String, location: String, imageUri: Uri?) {
