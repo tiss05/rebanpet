@@ -51,6 +51,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import android.os.Build
 import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
@@ -61,6 +62,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import coil.compose.AsyncImage
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.ui.graphics.ColorFilter
 
 
 @Composable
@@ -78,6 +92,10 @@ fun AddReportPage() {
     }
 
     val context = LocalContext.current
+
+    var isLocationFetched by remember {
+        mutableStateOf(false)
+    }
 
     // Launcher for picking an image from the gallery
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -143,18 +161,19 @@ fun AddReportPage() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                GetLocationButton(onLocationUpdated = { location ->
-                    locationAnimal = location
-                })
                 Text(
-                    text = "$locationAnimal",
+                    text = locationAnimal.ifEmpty { "Clica no ícone para obter a localização atual..."},
                     modifier = Modifier
                         .weight(1f)
-                        .padding(top = 10.dp, bottom = 10.dp, end = 8.dp)
                         .border(1.dp, Color.LightGray, shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
                         .padding(8.dp),
-                    style = TextStyle(fontSize = 15.sp)
+                    style = TextStyle(fontSize = 15.sp),
+                    color = if (isLocationFetched) Color.Black else Color.LightGray
                 )
+                GetLocationButton(onLocationUpdated = { location ->
+                    locationAnimal = location
+                    isLocationFetched = true
+                })
             }
 
             //Section "Photo"
@@ -169,13 +188,13 @@ fun AddReportPage() {
                     fontSize = 20.sp
                 )
             )
-            Row(
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(10.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            ) {*/
 
                 //IconButton(onClick = { galleryLauncher.launch("image/*") }) {
                     /*Image(
@@ -184,46 +203,45 @@ fun AddReportPage() {
                         modifier = Modifier.size(24.dp)
                     )
                 }*/
-                GalleryAccessButton(onImageSelected = { uri ->
-                    photoAnimal = uri
-                    // Do something with the selected image URI, e.g., upload it
-                    if (uri != null) {
-                        Toast.makeText(context, "Imagem selecionada: $uri", Toast.LENGTH_SHORT).show()
-                    }
-                })
 
-                Column(
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    GalleryAccessButton(onImageSelected = { uri ->
+                        photoAnimal = uri
+                    })
                     if (photoAnimal != null) {
-                        Text("Imagem Selecionada:")
+                        /*Text(
+                            text = "Imagem Selecionada:",
+                            color = Color.Black
+                        )*/
                         AsyncImage(
                             model = photoAnimal,
                             contentDescription = "Selected Image",
                             modifier = Modifier
-                                .size(200.dp)
-                                .border(BorderStroke(1.dp,Color.Black))
-                                .background(Color.White)
+                                .width(300.dp)
+                                .height(200.dp)
                                 .padding(2.dp),
-                            alignment = Alignment.Center,
-                            contentScale = ContentScale.Crop,
+                            contentScale = ContentScale.Fit,
 
                         )
                     } else {
                         Image(
                             painter = painterResource(id = R.drawable.default_photo_report),
-                            contentDescription = "Animal Photo",
-                            modifier = Modifier.size(200.dp),
-                            alignment = Alignment.CenterStart,
-                            contentScale = ContentScale.Crop
+                            contentDescription = "Unselected Photo",
+                            modifier = Modifier
+                                .width(300.dp)
+                                .height(200.dp),
+                            contentScale = ContentScale.Fit
                         )
                     }
                 }
-            }
+            //}
 
             // Section "Button to add report"
             Button(
@@ -276,8 +294,6 @@ fun saveDataToFirebase(context: Context, description: String, location: String, 
     val storageRef = storage.reference.child("images/$userId")
     val currentDateTime = sdf.format(Date())
     val reportId = firebaseRef.push().key!!
-
-
     val imageRef = storageRef.child("reports/$reportId")
     val uploadTask = imageRef.putFile(imageUri)
 
@@ -317,6 +333,15 @@ fun GetLocationButton(onLocationUpdated: (String) -> Unit) {
     val fusedLocationClient: FusedLocationProviderClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
+    val infiniteTransition = rememberInfiniteTransition()
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 0.9f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
 
     val locationPermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -331,11 +356,14 @@ fun GetLocationButton(onLocationUpdated: (String) -> Unit) {
 
     IconButton(onClick = {
         locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-    }) {
+    },
+        modifier = Modifier.scale(scale)
+    ) {
         Image(
             painter = painterResource(id = android.R.drawable.ic_menu_mylocation),
             contentDescription = "Get Location",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            colorFilter = ColorFilter.tint(Color.Blue)
         )
     }
 }
@@ -409,7 +437,7 @@ fun GalleryAccessButton(onImageSelected: (Uri?) -> Unit) {
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         imageUri = uri
-        onImageSelected(uri) // Callback to send the selected URI back
+        onImageSelected(uri)
         if (uri == null) {
             Toast.makeText(context, "Nenhuma imagem selecionada", Toast.LENGTH_SHORT).show()
         }
@@ -424,26 +452,22 @@ fun GalleryAccessButton(onImageSelected: (Uri?) -> Unit) {
         }
     }
 
-
-    IconButton(onClick = {
-        val permissionCheckResult = ContextCompat.checkSelfPermission(context, permissionToRequest.value)
-        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-            permissionGranted.value = true
-            galleryLauncher.launch("image/*")
-        } else {
-            permissionLauncher.launch(permissionToRequest.value)
-        }
-    }) {
+    IconButton(
+        onClick = {
+            val permissionCheckResult = ContextCompat.checkSelfPermission(context, permissionToRequest.value)
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                permissionGranted.value = true
+                galleryLauncher.launch("image/*")
+            } else {
+                permissionLauncher.launch(permissionToRequest.value)
+            }
+        },
+        modifier = Modifier.size(48.dp)
+        ) {
         Image(
             painter = painterResource(id = R.mipmap.ic_photo_camera),
             contentDescription = "Get Photo",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(48.dp)
         )
     }
-
-    /*
-    if (imageUri != null) {
-        AsyncImage(model = imageUri, contentDescription = "Selected Image")
-    }
-    */
 }
