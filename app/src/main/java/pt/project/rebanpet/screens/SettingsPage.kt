@@ -1,4 +1,4 @@
-package pt.project.rebanpet.fragments
+package pt.project.rebanpet.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

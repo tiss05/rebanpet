@@ -1,4 +1,4 @@
-package pt.project.rebanpet.fragments
+package pt.project.rebanpet.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -18,11 +18,14 @@ import pt.project.rebanpet.kennels.KennelsDistricts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapKennel() {
+fun MapKennel(innerPadding: PaddingValues) {
     val countryCoordinates = LatLng(39.3999, -8.2245)
-    var selectedCountry by remember { mutableStateOf(
-        KennelsDistricts
-        .countryDistricts[0]) }
+    var selectedCountry by remember {
+        mutableStateOf(
+            KennelsDistricts
+                .countryDistricts[0]
+        )
+    }
     var expanded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(selectedCountry.coordinates, 5f)
@@ -31,7 +34,11 @@ fun MapKennel() {
         cameraPositionState.position = CameraPosition.fromLatLngZoom(countryCoordinates, 7f)
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

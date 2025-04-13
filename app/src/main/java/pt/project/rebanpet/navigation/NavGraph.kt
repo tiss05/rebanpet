@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import pt.project.rebanpet.fragments.ReportsMapScreen
-import pt.project.rebanpet.fragments.ProfileScreen
-import pt.project.rebanpet.fragments.SettingScreen
-import pt.project.rebanpet.fragments.HomeScreen
-import pt.project.rebanpet.fragments.LogoutScreen
+import pt.project.rebanpet.screens.ProfileScreen
+import pt.project.rebanpet.screens.SettingScreen
+import pt.project.rebanpet.screens.HomeScreen
+import pt.project.rebanpet.screens.LogoutScreen
+import pt.project.rebanpet.screens.MapKennel
 
 @Composable
 fun SetUpNavGraph(
@@ -25,7 +25,7 @@ fun SetUpNavGraph(
             ProfileScreen(innerPadding = innerPadding)
         }
         composable(Screens.ReportsMap.route){
-            ReportsMapScreen(innerPadding = innerPadding)
+            MapKennel(innerPadding = innerPadding)
         }
         composable(Screens.Setting.route){
             SettingScreen(innerPadding = innerPadding)

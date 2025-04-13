@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -28,14 +29,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import pt.project.rebanpet.R
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 
 class NavigationDrawer : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -56,10 +63,10 @@ class NavigationDrawer : ComponentActivity() {
                         unSelectedIcon = Icons.Outlined.Person,
                     ),
                     NavigationItem(
-                        title = "Mapa",
+                        title = "Canis",
                         route = Screens.ReportsMap.route,
-                        selectedIcon = Icons.Filled.LocationOn,
-                        unSelectedIcon = Icons.Outlined.LocationOn,
+                        selectedIcon = ImageVector.vectorResource(R.drawable.ic_kennel_selected),
+                        unSelectedIcon = ImageVector.vectorResource(R.drawable.ic_kennel_unselected),
                     ),
                     NavigationItem(
                         title = "Definições",

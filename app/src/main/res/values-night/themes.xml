@@ -1,13 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Rebanpet" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Rebanpet" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your night theme here. -->
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorPrimaryVariant">@color/green</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/red</item>
         <item name="android:statusBarColor">@color/quantum_grey700</item>
+        <item name="colorSurface">@color/quantum_yellow</item>
+        <item name="colorOnSurface">@color/purple_200</item>
     </style>
 
-    <style name="Theme.Rebanpet" parent="Base.Theme.Rebanpet" />
 
     <style name="ShapeAppearance.Capsule" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">rounded</item>

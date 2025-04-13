@@ -1,8 +1,7 @@
-package pt.project.rebanpet.fragments
+package pt.project.rebanpet.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -12,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.colorResource
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -52,7 +50,6 @@ import java.text.SimpleDateFormat
 import android.os.Build
 import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,11 +65,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.ui.graphics.ColorFilter
 
@@ -97,14 +90,7 @@ fun AddReportPage() {
         mutableStateOf(false)
     }
 
-    // Launcher for picking an image from the gallery
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        photoAnimal = uri
-    }
-
-    fun clearInputs(){
+    fun clearInputs() {
         descriptionAnimal = ""
         locationAnimal = ""
         photoAnimal = null
@@ -118,150 +104,132 @@ fun AddReportPage() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-            //Section "Description"
-            Text(
-                text = "Descrição do animal",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 20.sp
-                )
+        //Section "Description"
+        Text(
+            text = "Descrição do animal",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp),
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 20.sp
             )
-            TextField(
-                value = descriptionAnimal,
-                onValueChange = { descriptionAnimal = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                placeholder = { Text("Escreva uma descrição do animal") },
-                textStyle = TextStyle(fontSize = 15.sp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
+        )
+        TextField(
+            value = descriptionAnimal,
+            onValueChange = { descriptionAnimal = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            placeholder = { Text("Escreva uma descrição do animal") },
+            textStyle = TextStyle(fontSize = 15.sp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
 
-            //Section "Location"
-            Text(
-                text = "Localização",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, top = 10.dp),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 20.sp
-                )
+        //Section "Location"
+        Text(
+            text = "Localização",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 10.dp),
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 20.sp
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = locationAnimal.ifEmpty { "Clica no ícone para obter a localização atual..."},
-                    modifier = Modifier
-                        .weight(1f)
-                        .border(1.dp, Color.LightGray, shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
-                        .padding(8.dp),
-                    style = TextStyle(fontSize = 15.sp),
-                    color = if (isLocationFetched) Color.Black else Color.LightGray
-                )
-                GetLocationButton(onLocationUpdated = { location ->
-                    locationAnimal = location
-                    isLocationFetched = true
-                })
-            }
-
-            //Section "Photo"
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
-                text = "Foto do animal",
+                text = locationAnimal.ifEmpty { "Clica no ícone para obter a localização atual..." },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, top = 10.dp),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 20.sp
-                )
-            )
-            /*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {*/
-
-                //IconButton(onClick = { galleryLauncher.launch("image/*") }) {
-                    /*Image(
-                        painter = painterResource(id = R.mipmap.ic_photo_camera),
-                        contentDescription = "Take Photo",
-                        modifier = Modifier.size(24.dp)
+                    .weight(1f)
+                    .border(
+                        1.dp,
+                        Color.LightGray,
+                        shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
                     )
-                }*/
+                    .padding(8.dp),
+                style = TextStyle(fontSize = 15.sp),
+                color = if (isLocationFetched) Color.Black else Color.LightGray
+            )
+            GetLocationButton(onLocationUpdated = { location ->
+                locationAnimal = location
+                isLocationFetched = true
+            })
+        }
 
+        //Section "Photo"
+        Text(
+            text = "Foto do animal",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 10.dp),
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 20.sp
+            )
+        )
 
-                Row(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            GalleryAccessButton(onImageSelected = { uri ->
+                photoAnimal = uri
+            })
+            if (photoAnimal != null) {
+                AsyncImage(
+                    model = photoAnimal,
+                    contentDescription = "Selected Image",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    GalleryAccessButton(onImageSelected = { uri ->
-                        photoAnimal = uri
-                    })
-                    if (photoAnimal != null) {
-                        /*Text(
-                            text = "Imagem Selecionada:",
-                            color = Color.Black
-                        )*/
-                        AsyncImage(
-                            model = photoAnimal,
-                            contentDescription = "Selected Image",
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(200.dp)
-                                .padding(2.dp),
-                            contentScale = ContentScale.Fit,
-
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.default_photo_report),
-                            contentDescription = "Unselected Photo",
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(200.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                }
-            //}
-
-            // Section "Button to add report"
-            Button(
-                onClick = {
-                    saveDataToFirebase(context, descriptionAnimal, locationAnimal, photoAnimal)
-                    clearInputs()
-                    Toast.makeText(context, "Denúncia concluída com sucesso!", Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Denunciar",
-                    style = TextStyle(fontSize = 15.sp)
+                        .width(300.dp)
+                        .height(200.dp)
+                        .padding(2.dp),
+                    contentScale = ContentScale.Fit
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.default_photo_report),
+                    contentDescription = "Unselected Photo",
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(200.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
         }
 
+        // Section "Button to add report"
+        Button(
+            onClick = {
+                saveDataToFirebase(context, descriptionAnimal, locationAnimal, photoAnimal)
+                clearInputs()
+                Toast.makeText(context, "Denúncia concluída com sucesso!", Toast.LENGTH_SHORT)
+                    .show()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(
+                text = "Denunciar",
+                style = TextStyle(fontSize = 15.sp)
+            )
+        }
+    }
 }
 
 fun saveDataToFirebase(context: Context, description: String, location: String, imageUri: Uri?) {

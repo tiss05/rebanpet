@@ -19,14 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import pt.project.rebanpet.R
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import androidx.compose.ui.text.TextStyle
-import coil.compose.AsyncImage
 
 @Composable
 fun NavBarHeader() {

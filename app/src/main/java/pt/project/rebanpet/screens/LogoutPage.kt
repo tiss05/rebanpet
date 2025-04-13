@@ -1,8 +1,7 @@
-package pt.project.rebanpet.fragments
+package pt.project.rebanpet.screens
 
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat.startActivity
