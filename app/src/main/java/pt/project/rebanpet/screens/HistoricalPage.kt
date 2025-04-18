@@ -1,5 +1,7 @@
 package pt.project.rebanpet.screens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
@@ -32,7 +34,9 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import coil.compose.rememberImagePainter
 import pt.project.rebanpet.report.Report
@@ -250,7 +254,12 @@ fun ReportItem(report: Report, onClick: () -> Unit) {
 }
 
 @Composable
-fun ReportDialog(report: Report, onDismiss: () -> Unit) {
+fun ReportDialog(report: Report, onDismiss: () -> Unit, onReportDeleted: () -> Unit = {}) {
+    val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance()
+    val currentUser = auth.currentUser
+    val mRef = currentUser?.uid?.let { database.getReference("reports/$it") }
+    val context = LocalContext.current
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
@@ -343,7 +352,24 @@ fun ReportDialog(report: Report, onDismiss: () -> Unit) {
                         }
 
                         IconButton(
-                            onClick = onDismiss,
+                            onClick = {
+                                mRef?.child(report.reportId)?.removeValue()
+                                ?.addOnSuccessListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Denúncia apagada com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onReportDeleted()
+                                    onDismiss()
+                                }
+                                ?.addOnFailureListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Falha ao apagar a denúncia",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } },
                             modifier = Modifier.size(48.dp)
                         ) {
                             Icon(
@@ -359,16 +385,28 @@ fun ReportDialog(report: Report, onDismiss: () -> Unit) {
     }
 }
 
+
 @Composable
 fun EmptyHistoricalScreen() {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = rememberImagePainter(R.drawable.empty_list),
+            contentDescription = "Empty list",
+            modifier = Modifier
+                .size(100.dp),
+            colorFilter = ColorFilter.tint(Color.LightGray),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = "Sem denúncias",
+            color = Color.LightGray,
             style = MaterialTheme.typography.bodyLarge
         )
     }

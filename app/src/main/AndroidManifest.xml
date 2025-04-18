@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_logo"
@@ -45,9 +46,13 @@
             android:exported="false"
             android:theme="@style/BarTheme"
             android:parentActivityName=".LoginActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
-    </application>
 
+        <activity
+            android:name=".navigation.NavigationDrawer"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBe9eKdMlCXgjBgnCaiwJcUu6jztIRK7ug"/>
+    </application>
 </manifest>
